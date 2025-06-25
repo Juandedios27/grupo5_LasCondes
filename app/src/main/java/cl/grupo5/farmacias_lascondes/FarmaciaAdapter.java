@@ -17,44 +17,32 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FarmaciaAdapter extends ArrayAdapter<Farmacia> implements Filterable {
-    private final Context context;
+
     private final List<Farmacia> originalList;
     private final List<Farmacia> filteredList;
     private final FarmaciaFilter farmaciaFilter;
 
     public FarmaciaAdapter(Context context, List<Farmacia> farmacias) {
         super(context, 0, farmacias);
-        this.context = context;
         this.originalList = new ArrayList<>(farmacias);
         this.filteredList = new ArrayList<>(farmacias);
         this.farmaciaFilter = new FarmaciaFilter();
     }
 
-    @Override
-    public int getCount() {
-        return filteredList.size();
-    }
-
-    @Override
-    public Farmacia getItem(int position) {
-        return filteredList.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+    @Override public int      getCount()         { return filteredList.size(); }
+    @Override public Farmacia getItem(int pos)   { return filteredList.get(pos); }
+    @Override public long     getItemId(int pos) { return pos; }
 
     @NonNull @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+    public View getView(int pos, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(context)
+            convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.item_farmacia, parent, false);
         }
-
-        Farmacia f = getItem(position);
+        Farmacia f = getItem(pos);
 
         TextView tvNombre    = convertView.findViewById(R.id.tvNombre);
         TextView tvComuna    = convertView.findViewById(R.id.tvComuna);
@@ -62,83 +50,79 @@ public class FarmaciaAdapter extends ArrayAdapter<Farmacia> implements Filterabl
         TextView tvApertura  = convertView.findViewById(R.id.tvApertura);
         TextView tvCierre    = convertView.findViewById(R.id.tvCierre);
         TextView tvTelefono  = convertView.findViewById(R.id.tvTelefono);
-        Button btnLlamar     = convertView.findViewById(R.id.btnLlamar);
-        Button btnUbicar     = convertView.findViewById(R.id.btnUbicar);
+        Button   btnLlamar   = convertView.findViewById(R.id.btnLlamar);
+        Button   btnUbicar   = convertView.findViewById(R.id.btnUbicar);
 
-        // Rellenar texto principal
-        tvNombre   .setText(f != null && f.getNombre()    != null ? f.getNombre()    : "—");
-        tvComuna   .setText(f != null && f.getComuna()    != null ? f.getComuna()    : "—");
-        tvDireccion.setText(f != null && f.getDireccion() != null ? f.getDireccion() : "—");
-        tvTelefono .setText(f != null && f.getTelefono()  != null ? f.getTelefono()  : "—");
+        tvNombre.setText   (noNull(f.getNombre(),    "—"));
+        tvComuna.setText   (noNull(f.getComuna(),    "—"));
+        tvDireccion.setText(noNull(f.getDireccion(), "—"));
+        tvTelefono.setText (noNull(f.getTelefono(),  "—"));
 
-        // Formatear hora de apertura
-        String apertura = f != null ? f.getApertura() : null;
-        if (!TextUtils.isEmpty(apertura)) {
-            String hhmm = apertura.length() >= 5 ? apertura.substring(0,5) : apertura;
-            tvApertura.setText("Abre: " + hhmm);
-        } else {
-            tvApertura.setText("Abre: —");
-        }
+        tvApertura.setText("Abre: "   + horaCorta(f.getApertura(), "—"));
+        tvCierre  .setText("Cierra: " + horaCorta(f.getCierre(),   "—"));
 
-        // Formatear hora de cierre
-        String cierre = f != null ? f.getCierre() : null;
-        if (!TextUtils.isEmpty(cierre)) {
-            String hhmm = cierre.length() >= 5 ? cierre.substring(0,5) : cierre;
-            tvCierre.setText("Cierra: " + hhmm);
-        } else {
-            tvCierre.setText("Cierra: —");
-        }
-
-        // Botón Llamar
         btnLlamar.setOnClickListener(v -> {
-            if (f != null && !TextUtils.isEmpty(f.getTelefono())) {
-                Intent intent = new Intent(Intent.ACTION_DIAL,
+            if (!TextUtils.isEmpty(f.getTelefono())) {
+                Intent i = new Intent(Intent.ACTION_DIAL,
                         Uri.parse("tel:" + f.getTelefono()));
-                context.startActivity(intent);
+                getContext().startActivity(i);
             }
         });
 
-        // Botón Ubicar (mapa)
         btnUbicar.setOnClickListener(v -> {
-            if (f != null) {
-                String uri = String.format(
-                        "geo:%f,%f?q=%s",
-                        f.getLatitud(),
-                        f.getLongitud(),
-                        Uri.encode(f.getNombre())
-                );
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                context.startActivity(intent);
+            Uri uri = Uri.parse("google.navigation:q=" + f.getLatitud() + "," + f.getLongitud());
+            Intent map = new Intent(Intent.ACTION_VIEW, uri);
+            map.setPackage("com.google.android.apps.maps");
+            if (map.resolveActivity(getContext().getPackageManager()) == null) {
+                // Fallback a navegador
+                uri = Uri.parse(String.format(Locale.US,
+                        "https://www.google.com/maps/dir/?api=1&destination=%f,%f",
+                        f.getLatitud(), f.getLongitud()));
+                map = new Intent(Intent.ACTION_VIEW, uri);
             }
+            getContext().startActivity(map);
         });
-
         return convertView;
     }
 
-    @NonNull @Override
-    public Filter getFilter() {
-        return farmaciaFilter;
+    @NonNull @Override public Filter getFilter() { return farmaciaFilter; }
+
+    /* ----------------------- helpers ----------------------- */
+
+    private String noNull(String s, String def) { return s != null && !s.isEmpty() ? s : def; }
+
+    private String horaCorta(String h, String def) {
+        return !TextUtils.isEmpty(h) ? (h.length() >= 5 ? h.substring(0,5) : h) : def;
     }
+
+    /* ----------------------- filtro ----------------------- */
 
     private class FarmaciaFilter extends Filter {
         @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            // siempre devolvemos la lista completa
-            List<Farmacia> filtered = new ArrayList<>(originalList);
-            FilterResults results = new FilterResults();
-            results.values = filtered;
-            results.count  = filtered.size();
-            return results;
+        protected FilterResults performFiltering(CharSequence cons) {
+            FilterResults r = new FilterResults();
+            if (cons == null || cons.length() == 0) {
+                r.values = new ArrayList<>(originalList);
+                r.count  = originalList.size();
+            } else {
+                String q = cons.toString().toLowerCase(Locale.getDefault()).trim();
+                List<Farmacia> match = new ArrayList<>();
+                for (Farmacia f : originalList) {
+                    if (f.getNombre() != null &&
+                            f.getNombre().toLowerCase(Locale.getDefault()).contains(q)) {
+                        match.add(f);
+                    }
+                }
+                r.values = match;
+                r.count  = match.size();
+            }
+            return r;
         }
-
         @SuppressWarnings("unchecked")
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
+        @Override protected void publishResults(CharSequence c, FilterResults r) {
             filteredList.clear();
-            filteredList.addAll((List<Farmacia>) results.values);
-            clear();
-            addAll(filteredList);
-            notifyDataSetChanged();
+            filteredList.addAll((List<Farmacia>) r.values);
+            clear(); addAll(filteredList); notifyDataSetChanged();
         }
     }
 }

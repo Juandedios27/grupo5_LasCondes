@@ -1,88 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp"
+    android:orientation="vertical" android:padding="12dp"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground">
 
-    <!-- Nombre -->
-    <TextView
-        android:id="@+id/tvNombre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nombre de Farmacia"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="@color/black"/>
+    <TextView android:id="@+id/tvNombre" android:textStyle="bold"
+        android:textSize="16sp" android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-    <!-- Comuna -->
-    <TextView
-        android:id="@+id/tvComuna"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Comuna"
-        android:textSize="14sp"
-        android:textColor="@color/black"
+    <TextView android:id="@+id/tvComuna" android:textSize="14sp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="2dp"/>
 
-    <!-- Dirección -->
-    <TextView
-        android:id="@+id/tvDireccion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Dirección"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:layout_marginTop="2dp"/>
-    <!-- NUEVO: Hora de apertura -->
-    <TextView
-        android:id="@+id/tvApertura"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="abre: 22:00"
-        android:textSize="14sp"
-        android:textColor="@color/black"
+    <TextView android:id="@+id/tvDireccion" android:textSize="14sp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="2dp"/>
 
-    <!-- Horario de cierre -->
-    <TextView
-        android:id="@+id/tvCierre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cierra: 22:00"
-        android:textSize="14sp"
-        android:textColor="@color/black"
+    <TextView android:id="@+id/tvApertura" android:textSize="14sp"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginTop="2dp"/>
 
-    <!-- Teléfono -->
-    <TextView
-        android:id="@+id/tvTelefono"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Tel: 123456789"
-        android:textSize="14sp"
-        android:textColor="@color/black"
+    <TextView android:id="@+id/tvCierre" android:textSize="14sp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
         android:layout_marginTop="2dp"/>
 
-    <!-- Botones de acción -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="end"
-        android:layout_marginTop="8dp">
+    <TextView android:id="@+id/tvTelefono" android:textSize="14sp"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"/>
 
-        <Button
-            android:id="@+id/btnLlamar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="horizontal"
+        android:gravity="end" android:layout_marginTop="8dp">
+
+        <Button android:id="@+id/btnLlamar"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Llamar"/>
 
-        <Button
-            android:id="@+id/btnUbicar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button android:id="@+id/btnUbicar"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="Ubicar"/>
     </LinearLayout>
 </LinearLayout>
