@@ -10,8 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
@@ -21,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 public class RegistroActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private LottieAnimationView lottieLoader;
     private EditText etEmailReg, etPassReg, etPassReg2;
     private Button btnRegister;
     private TextView tvGoLogin;
@@ -35,7 +32,6 @@ public class RegistroActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // Referencias UI
-        lottieLoader = findViewById(R.id.lottieLoader);
         etEmailReg  = findViewById(R.id.etEmailReg);
         etPassReg   = findViewById(R.id.etPassReg);
         etPassReg2  = findViewById(R.id.etPassReg2);
@@ -68,17 +64,12 @@ public class RegistroActivity extends AppCompatActivity {
             return;
         }
 
-        // Mostrar loader
-        lottieLoader.setVisibility(View.VISIBLE);
-        lottieLoader.playAnimation();
         btnRegister.setEnabled(false);
 
         // Crear usuario en Firebase
         mAuth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(task -> {
                     // Ocultar loader
-                    lottieLoader.pauseAnimation();
-                    lottieLoader.setVisibility(View.GONE);
                     btnRegister.setEnabled(true);
 
                     if (task.isSuccessful()) {

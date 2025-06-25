@@ -19,6 +19,9 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
@@ -28,5 +31,7 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
 
 </manifest>
