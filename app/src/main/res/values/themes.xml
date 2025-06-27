@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Farmacias_LasCondes" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/verde</item>
     </style>
 
     <style name="Theme.Farmacias_LasCondes" parent="Base.Theme.Farmacias_LasCondes" />
