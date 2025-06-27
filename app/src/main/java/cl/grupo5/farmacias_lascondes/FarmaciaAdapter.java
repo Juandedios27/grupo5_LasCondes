@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,8 +51,8 @@ public class FarmaciaAdapter extends ArrayAdapter<Farmacia> implements Filterabl
         TextView tvApertura  = convertView.findViewById(R.id.tvApertura);
         TextView tvCierre    = convertView.findViewById(R.id.tvCierre);
         TextView tvTelefono  = convertView.findViewById(R.id.tvTelefono);
-        Button   btnLlamar   = convertView.findViewById(R.id.btnLlamar);
-        Button   btnUbicar   = convertView.findViewById(R.id.btnUbicar);
+        ImageButton btnLlamar   = convertView.findViewById(R.id.btnLlamar);
+        ImageButton   btnUbicar   = convertView.findViewById(R.id.btnUbicar);
 
         tvNombre.setText   (noNull(f.getNombre(),    "—"));
         tvComuna.setText   (noNull(f.getComuna(),    "—"));
