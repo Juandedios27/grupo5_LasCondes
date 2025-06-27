@@ -1,10 +1,12 @@
 package cl.grupo5.farmacias_lascondes;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         lvFarmacias = findViewById(R.id.lvFarmacias);
         etFilter    = findViewById(R.id.etFilter);
 
+        ImageButton btnApagar = findViewById(R.id.btnApagar);
+
         setupRetrofit();
         obtenerFarmacias();
 
@@ -67,6 +71,27 @@ public class MainActivity extends AppCompatActivity {
         // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // —————— Interceptar “Back” físico/software ——————
+        btnApagar.setOnClickListener(v -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Cerrar sesión")
+                    .setMessage("¿Seguro que deseas cerrar sesión?")
+                    .setPositiveButton("Sí", (dialog, which) -> {
+                        // Cerrar sesión en Firebase
+                        FirebaseAuth.getInstance().signOut();
+                        // Volver al LoginActivity y limpiar la pila
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                | Intent.FLAG_ACTIVITY_NEW_TASK
+                                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        // Finalizar MainActivity
+                        finish();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        });
+
+
         getOnBackPressedDispatcher().addCallback(this,
                 new OnBackPressedCallback(true) {
                     @Override
