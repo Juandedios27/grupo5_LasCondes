@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@drawable/fondosplash">
+    android:background="@drawable/fondodegradado">
 
     <ImageView
         android:layout_width="150dp"
