@@ -33,9 +33,6 @@ public class Farmacia {
     @SerializedName("local_direccion")
     private String direccion;
 
-    @SerializedName("funcionamiento_hora_apertura")
-    private String apertura;
-
     @SerializedName("funcionamiento_hora_cierre")
     private String cierre;
 
@@ -61,7 +58,6 @@ public class Farmacia {
     public String getComuna() { return comuna; }
     public String getLocalidad() { return localidad; }
     public String getDireccion() { return direccion; }
-    public String getApertura() { return apertura; }
     public String getCierre() { return cierre; }
     public String getTelefono() { return telefono; }
     public double getLatitud() { return latitud; }

@@ -54,13 +54,13 @@ public class FarmaciaAdapter extends ArrayAdapter<Farmacia> implements Filterabl
         ImageButton btnLlamar   = convertView.findViewById(R.id.btnLlamar);
         ImageButton   btnUbicar   = convertView.findViewById(R.id.btnUbicar);
 
-        tvNombre.setText   (noNull(f.getNombre(),    "—"));
-        tvComuna.setText   (noNull(f.getComuna(),    "—"));
-        tvDireccion.setText(noNull(f.getDireccion(), "—"));
-        tvTelefono.setText (noNull(f.getTelefono(),  "—"));
+        tvComuna.setText("Comuna: " + noNull(f.getComuna(), "—"));
+        tvDireccion.setText("Dirección: " + noNull(f.getDireccion(), "—"));
+        tvTelefono.setText("Teléfono: " + noNull(f.getTelefono(), "—"));
+        tvNombre.setText("Nombre: " + noNull(f.getNombre(), "—"));
+        tvCierre.setText("Cierra a las: " + horaCorta(f.getCierre(), "—") + " hrs");
 
-        tvApertura.setText("Abre: "   + horaCorta(f.getApertura(), "—"));
-        tvCierre  .setText("Cierra: " + horaCorta(f.getCierre(),   "—"));
+
 
         btnLlamar.setOnClickListener(v -> {
             if (!TextUtils.isEmpty(f.getTelefono())) {
