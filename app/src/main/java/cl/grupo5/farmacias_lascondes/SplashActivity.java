@@ -10,6 +10,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,10 +44,18 @@ public class SplashActivity extends AppCompatActivity {
         alertBuilder.setTitle("Sin conexión");
         alertBuilder.setMessage("Necesitas estar conectado a Internet para usar la aplicación.");
         alertBuilder.setPositiveButton("OK", (dialogInterface, i) -> finish());
+
+        // 1) Muestra el diálogo y guarda la referencia
         AlertDialog alerta = alertBuilder.show();
         alerta.setCancelable(false);
         alerta.setCanceledOnTouchOutside(false);
+
+        // 2) Pinta el botón OK de verde
+        int verde = ContextCompat.getColor(this, R.color.verde);
+        alerta.getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(verde);
     }
+
 
     private boolean hayConexion(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

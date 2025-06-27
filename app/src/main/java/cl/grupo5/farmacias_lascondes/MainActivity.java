@@ -1,5 +1,6 @@
 package cl.grupo5.farmacias_lascondes;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -27,6 +29,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import androidx.appcompat.app.AlertDialog;
+import android.view.MenuItem;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.core.content.ContextCompat;
+
 public class MainActivity extends AppCompatActivity {
 
     private ListView       lvFarmacias;
@@ -34,18 +42,17 @@ public class MainActivity extends AppCompatActivity {
     private FarmaciaAdapter adapter;
     private FarmaciaService service;
 
-    @Override
-    protected void onCreate(Bundle b) {
-        super.onCreate(b);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // —————— Inicialización UI y Retrofit ——————
         lvFarmacias = findViewById(R.id.lvFarmacias);
         etFilter    = findViewById(R.id.etFilter);
 
         setupRetrofit();
         obtenerFarmacias();
 
-        // Filtrado en vivo
         etFilter.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s,int a,int c,int d){}
             public void onTextChanged(CharSequence s,int a,int b,int c){
@@ -53,7 +60,22 @@ public class MainActivity extends AppCompatActivity {
             }
             public void afterTextChanged(Editable s){}
         });
+
+        // —————— Flecha “up” en la Toolbar (opcional) ——————
+        // Toolbar toolbar = findViewById(R.id.toolbar);
+        // setSupportActionBar(toolbar);
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // —————— Interceptar “Back” físico/software ——————
+        getOnBackPressedDispatcher().addCallback(this,
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        handleBack();
+                    }
+                });
     }
+
 
     /* ------------------ Retrofit ------------------ */
 
@@ -116,4 +138,59 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            handleBack();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void handleBack() {
+        // 1) Crea y muestra el AlertDialog, guardando la referencia
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Salir")
+                .setMessage("¿Desea salir de la aplicación?")
+                .setPositiveButton("Sí", (d, which) -> {
+                    d.dismiss();
+                    showLogoutDialog();
+                })
+                .setNegativeButton("No", (d, which) -> d.dismiss())
+                .show();
+
+        // 2) Cambia el color de “Sí” y “No”
+        int miColor = ContextCompat.getColor(this, R.color.verde);
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(miColor);
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(miColor);
+    }
+
+
+    private void showLogoutDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Cerrar sesión")
+                .setMessage("¿Desea cerrar sesión?")
+                .setPositiveButton("Sí", (d, which) -> {
+                    d.dismiss();
+                    FirebaseAuth.getInstance().signOut();
+                    finishAffinity();
+                })
+                .setNegativeButton("No", (d, which) -> {
+                    d.dismiss();
+                    finishAffinity();
+                })
+                .show();
+
+        int miColor = ContextCompat.getColor(this, R.color.verde);
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                .setTextColor(miColor);
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                .setTextColor(miColor);
+    }
+
+
 }
